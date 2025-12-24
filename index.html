@@ -5,12 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodableHR | HR Data Analytics & AI Automation</title>
+    <meta name="description" content="Expert HR Data Analytics and AI Automation Consulting. Subscription dashboards, HRIS administration, and workforce insights.">
+    
+    <!-- External Assets -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .page-section { display: none; }
+        .page-section.active { display: block; animation: fadeIn 0.4s ease-out; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
+        .dropdown-menu { display: none; opacity: 0; transform: translateY(-10px); transition: all 0.2s; }
+        .group:hover .dropdown-menu { display: block; opacity: 1; transform: translateY(0); }
+        
+        .mobile-menu { transform: translateX(100%); transition: transform 0.3s ease-in-out; }
+        .mobile-menu.open { transform: translateX(0); }
+
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        .grayscale-hover { filter: grayscale(100%); transition: filter 0.5s ease; }
+        .grayscale-hover:hover { filter: grayscale(0%); }
+        
+        .service-card-hover:hover { transform: scale(1.02); }
     </style>
 <script type="importmap">
 {
@@ -18,13 +42,572 @@
     "react": "https://esm.sh/react@^19.2.3",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0"
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
   }
 }
 </script>
 </head>
 <body class="bg-white text-gray-900">
-    <div id="root"></div>
+
+    <!-- Top Banner -->
+    <div class="bg-[#007BFF] text-white py-2 text-center text-sm font-medium px-4 relative z-[60]">
+        Tired of the endless HR number juggling? Check out our <a href="#subscription" class="underline font-bold">HR Analytics subscription service!</a>
+    </div>
+
+    <!-- Header / Navbar -->
+    <nav class="sticky top-0 z-50 bg-[#0B1B2B]/95 backdrop-blur-sm text-white shadow-lg border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="#home" class="flex items-center space-x-2 group">
+                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center transform group-hover:rotate-12 transition-transform">
+                        <i data-lucide="leaf" class="text-[#007BFF] w-6 h-6"></i>
+                    </div>
+                    <span class="text-2xl font-bold tracking-tight">Codable<span class="text-[#007BFF]">HR</span></span>
+                </a>
+
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <div class="relative group h-full flex items-center">
+                        <button class="flex items-center space-x-1 hover:text-[#007BFF] transition-colors py-4 uppercase font-medium text-sm tracking-widest">
+                            <span>SERVICES</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </button>
+                        <div class="dropdown-menu absolute left-0 top-[100%] bg-white text-gray-800 shadow-xl rounded-b-lg overflow-hidden min-w-[280px]">
+                            <a href="#subscription" class="block px-6 py-4 hover:bg-gray-50 hover:text-[#007BFF] border-b border-gray-100">HR Dashboard Subscription</a>
+                            <a href="#automation" class="block px-6 py-4 hover:bg-gray-50 hover:text-[#007BFF] border-b border-gray-100">AI HR Automation</a>
+                            <a href="#hris" class="block px-6 py-4 hover:bg-gray-50 hover:text-[#007BFF]">HRIS Administration</a>
+                        </div>
+                    </div>
+                    <a href="#blog" class="hover:text-[#007BFF] transition-colors uppercase font-medium text-sm tracking-widest">OUR WORK & INSIGHTS</a>
+                    <a href="#book" class="bg-[#007BFF] hover:bg-[#0056b3] text-white px-6 py-2 rounded font-bold transition-all shadow-md transform hover:scale-105">
+                        BOOK A CALL
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="p-2">
+                        <i data-lucide="menu" id="menu-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu Drawer -->
+        <div id="mobile-drawer" class="fixed inset-0 bg-[#0B1B2B] z-[100] mobile-menu p-6 flex flex-col space-y-8 md:hidden">
+            <div class="flex justify-between items-center">
+                <span class="text-2xl font-bold">Codable<span class="text-[#007BFF]">HR</span></span>
+                <button id="close-menu-btn"><i data-lucide="x" class="w-8 h-8"></i></button>
+            </div>
+            <div class="flex flex-col space-y-6 text-xl">
+                <div class="border-t border-white/10 pt-4">
+                    <p class="text-gray-400 text-xs font-bold tracking-widest mb-4 uppercase">Services</p>
+                    <a href="#subscription" class="block py-2">HR Dashboard Subscription</a>
+                    <a href="#automation" class="block py-2">AI HR Automation</a>
+                    <a href="#hris" class="block py-2">HRIS Administration</a>
+                </div>
+                <a href="#blog" class="block uppercase tracking-wide">Our Work & Insights</a>
+                <a href="#book" class="bg-[#007BFF] text-white px-6 py-4 rounded text-center font-bold shadow-lg">BOOK A CALL</a>
+            </div>
+        </div>
+    </nav>
+
+    <main id="content-mount">
+        
+        <!-- HOME PAGE -->
+        <section id="home" class="page-section active">
+            <!-- Hero -->
+            <div class="relative min-h-[85vh] flex items-center">
+                <div class="absolute inset-0 z-0">
+                    <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=2000" class="w-full h-full object-cover" alt="Background">
+                    <div class="absolute inset-0 bg-[#0B1B2B]/75"></div>
+                </div>
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center text-white">
+                    <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">HR Data Analytics and AI Automation Consulting Services</h1>
+                    <p class="text-xl md:text-2xl font-light mb-10 max-w-3xl mx-auto italic opacity-90">Flexible, modern, hassle-free support that lets you focus on the big picture.</p>
+                    <a href="#book" class="inline-block text-xl font-medium italic underline hover:text-[#007BFF] transition-colors mb-12">Book A Call</a>
+                    <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                        <a href="#subscription" class="bg-[#007BFF] hover:bg-[#0056b3] text-white px-8 py-5 rounded font-bold transition-all shadow-xl uppercase tracking-widest text-sm text-center">HR Dashboard Subscription</a>
+                        <a href="#automation" class="bg-[#007BFF] hover:bg-[#0056b3] text-white px-8 py-5 rounded font-bold transition-all shadow-xl uppercase tracking-widest text-sm text-center">AI HR Automation</a>
+                        <a href="#hris" class="bg-[#007BFF] hover:bg-[#0056b3] text-white px-8 py-5 rounded font-bold transition-all shadow-xl uppercase tracking-widest text-sm text-center">HRIS Administration</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Areas of Focus -->
+            <div class="py-24 bg-[#0B1B2B]">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <p class="text-[#007BFF] text-sm font-bold uppercase tracking-widest mb-4">Our Specialization</p>
+                        <h2 class="text-4xl md:text-5xl font-bold text-white tracking-tight">Areas of Focus</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="focus-grid">
+                        <!-- All 9 items injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Section -->
+            <div class="py-24">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col lg:flex-row items-center gap-16">
+                        <div class="lg:w-1/2 relative h-[500px] w-full">
+                            <img src="https://picsum.photos/seed/man-consultant/500/600" class="absolute left-0 top-0 w-3/4 h-3/4 object-cover rounded shadow-lg z-10 border-8 border-white" alt="Consultant">
+                            <img src="https://picsum.photos/seed/woman-analyst/500/600" class="absolute right-0 bottom-0 w-3/4 h-3/4 object-cover rounded shadow-lg z-20 border-8 border-white" alt="Analyst">
+                        </div>
+                        <div class="lg:w-1/2">
+                            <p class="text-gray-400 text-sm font-bold uppercase tracking-widest mb-4">Learn About Us</p>
+                            <div class="flex items-center space-x-2 mb-8">
+                                <div class="w-10 h-1 bg-gray-300"></div>
+                                <h2 class="text-5xl font-bold text-gray-800 tracking-tight">15 Years Experience</h2>
+                            </div>
+                            <div class="space-y-6 text-gray-600 leading-relaxed text-lg">
+                                <p>At Codable HR, we take a methodical and programmable approach to delivering top-tier contractual HR data solutions. Specializing in number-savvy HR functions such as analytics, compensation, and payroll management.</p>
+                                <p>We leverage cutting-edge AI and BI technology to provide data-driven, scalable solutions that propel your business forward. We value people, innovation, and efficiency. Our commitment is to empower you with customizable, flexible, and adaptable tools to make informed HR decisions.</p>
+                                <button class="border-2 border-gray-800 text-gray-800 px-8 py-3 font-bold hover:bg-gray-800 hover:text-white transition-all uppercase text-sm">Learn More</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Differences Section -->
+            <section class="py-24 bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
+                    <p class="text-gray-400 text-sm font-bold uppercase tracking-widest mb-4">Consulting Services</p>
+                    <div class="flex items-center justify-center space-x-2">
+                        <div class="w-10 h-1 bg-gray-300"></div>
+                        <h2 class="text-5xl font-bold text-gray-800 tracking-tight">What We Do Differently</h2>
+                    </div>
+                </div>
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid md:grid-cols-3 gap-0" id="diff-grid">
+                        <!-- 6 items injected by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why Choose Us Shared -->
+            <div id="why-choose-us-placeholder-home"></div>
+        </section>
+
+        <!-- SUBSCRIPTION PAGE -->
+        <section id="subscription" class="page-section">
+            <div class="py-24 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center space-x-2 mb-12">
+                        <div class="w-10 h-1 bg-gray-300"></div>
+                        <h1 class="text-5xl font-bold text-gray-800 tracking-tight">HR Analytics Subscription Services</h1>
+                    </div>
+                    <div class="grid lg:grid-cols-2 gap-16 items-start">
+                        <div class="space-y-8 text-gray-600">
+                            <div>
+                                <h2 class="text-3xl font-bold text-gray-800 mb-4">Need a smarter, <span class="text-[#007BFF] italic">leaner</span> HR data solution?</h2>
+                                <p class="text-lg">Fractional HR gives you access to expert analytics—without the cost of a full-time team.</p>
+                            </div>
+                            <p>At Codable HR, we design custom, scalable solutions that align with your goals and grow with your business. No templates. No bottlenecks. Just data-driven results.</p>
+                            <div class="space-y-4">
+                                <h3 class="font-bold text-gray-900 uppercase tracking-widest text-sm">What You Get With Our Subscription</h3>
+                                <ul class="list-disc pl-5 space-y-3">
+                                    <li><span class="font-bold">Real-Time Insights:</span> Monitor trends with dynamic dashboards.</li>
+                                    <li><span class="font-bold">Scalable Support:</span> Flexible plans that grow with your needs.</li>
+                                    <li><span class="font-bold">Smarter Decisions:</span> Use predictive analytics to improve performance.</li>
+                                    <li><span class="font-bold">Cost-Efficient:</span> Expert analytics without the full-time overhead.</li>
+                                    <li><span class="font-bold">Expert Guidance:</span> Ongoing strategic support from seasoned analysts.</li>
+                                </ul>
+                            </div>
+                            <div class="p-6 bg-gray-50 border-l-4 border-[#007BFF] rounded-r">
+                                <p class="italic text-gray-600">Codable HR helps you move beyond basic reporting to build people programs that truly drive business success.</p>
+                            </div>
+                        </div>
+                        <div class="sticky top-24">
+                            <img src="https://picsum.photos/seed/sub-analytics/800/1000" class="w-full rounded shadow-2xl" alt="Analytics">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="service-grid-placeholder-sub" class="py-20 bg-gray-50"></div>
+            <div id="love-hr-placeholder-sub"></div>
+        </section>
+
+        <!-- AUTOMATION PAGE -->
+        <section id="automation" class="page-section">
+            <div class="py-24 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center space-x-2 mb-12">
+                        <div class="w-10 h-1 bg-gray-300"></div>
+                        <h1 class="text-5xl font-bold text-gray-800 tracking-tight">AI HR Workflow Automation</h1>
+                    </div>
+                    <div class="grid lg:grid-cols-2 gap-16 items-start">
+                        <div class="space-y-8 text-gray-600">
+                            <div>
+                                <h2 class="text-3xl font-bold text-gray-800 mb-4 leading-tight">A solution designed to transform how you <span class="text-[#007BFF]">manage and leverage</span> people data.</h2>
+                                <p>Empower your people and drive success with our People Data Workflow Automation. Streamline processes, eliminate inefficiencies, and achieve your goals.</p>
+                            </div>
+                            <div class="space-y-4">
+                                <h4 class="font-bold text-[#0B1B2B] uppercase tracking-widest text-xs">Deep Insights & Seamless Integration</h4>
+                                <p class="text-sm">Gain real-time workforce insights with customizable dashboards. Our system integrates with existing HR tools and scales from small teams to enterprises.</p>
+                            </div>
+                            <div class="space-y-4">
+                                <h4 class="font-bold text-[#0B1B2B] uppercase tracking-widest text-xs">End-to-End Automation & Security</h4>
+                                <p class="text-sm">Automate the entire employee lifecycle, from onboarding to offboarding, while ensuring top-notch data security and compliance.</p>
+                            </div>
+                            <div class="space-y-4">
+                                <h4 class="font-bold text-[#0B1B2B] uppercase tracking-widest text-xs">Enhanced Employee Experience</h4>
+                                <p class="text-sm">Empower employees with self-service portals. Transform HR operations into a data-driven powerhouse, simplifying tasks at every level.</p>
+                            </div>
+                        </div>
+                        <div class="sticky top-24">
+                            <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=800" class="w-full rounded shadow-2xl" alt="Automation">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="service-grid-placeholder-auto" class="py-20 bg-gray-50"></div>
+            <div id="love-hr-placeholder-auto"></div>
+        </section>
+
+        <!-- HRIS PAGE -->
+        <section id="hris" class="page-section">
+            <div class="py-24 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center space-x-2 mb-12">
+                        <div class="w-10 h-1 bg-gray-300"></div>
+                        <h1 class="text-5xl font-bold text-gray-800 tracking-tight">HRIS Administration</h1>
+                    </div>
+                    <div class="grid lg:grid-cols-2 gap-16 items-start">
+                        <div class="space-y-8 text-gray-600">
+                            <div>
+                                <h2 class="text-3xl font-bold text-gray-800 mb-4 leading-tight">Unlock the Full Power of <span class="text-[#007BFF]">Your HR Operations</span></h2>
+                                <p>Streamline HR and empower your people with expert HRIS Administration. Focus on building a thriving organization, not administrative burdens.</p>
+                            </div>
+                            <div class="space-y-6">
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-10 h-10 rounded bg-[#007BFF]/10 flex items-center justify-center text-[#007BFF] shrink-0 mt-1"><i data-lucide="shield-check" class="w-6 h-6"></i></div>
+                                    <div><h4 class="font-bold text-gray-900">Solve System Issues at the Root</h4><p class="text-sm">Addressing causes of challenges for long-term efficiency and seamless processes.</p></div>
+                                </div>
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-10 h-10 rounded bg-[#007BFF]/10 flex items-center justify-center text-[#007BFF] shrink-0 mt-1"><i data-lucide="settings" class="w-6 h-6"></i></div>
+                                    <div><h4 class="font-bold text-gray-900">Tailored Solutions for Every Business</h4><p class="text-sm">Expertise in recommending and tailoring the best HRIS solution for all sizes.</p></div>
+                                </div>
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-10 h-10 rounded bg-[#007BFF]/10 flex items-center justify-center text-[#007BFF] shrink-0 mt-1"><i data-lucide="zap" class="w-6 h-6"></i></div>
+                                    <div><h4 class="font-bold text-gray-900">Automated Workflows</h4><p class="text-sm">Effortless efficiency from onboarding to benefits management.</p></div>
+                                </div>
+                            </div>
+                            <p class="text-sm border-t pt-6">Take control of your HR operations and create a more efficient workplace. Let us handle the details—from setup to support—so you can focus on driving organizational success.</p>
+                        </div>
+                        <div class="sticky top-24">
+                            <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=800" class="w-full rounded shadow-2xl" alt="HRIS">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="service-grid-placeholder-hris" class="py-20 bg-gray-50"></div>
+            <div id="love-hr-placeholder-hris"></div>
+        </section>
+
+        <!-- BLOG / OUR WORK PAGE -->
+        <section id="blog" class="page-section">
+            <div class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center space-x-2 mb-12">
+                        <div class="w-10 h-1 bg-[#007BFF]"></div>
+                        <h1 class="text-5xl font-bold text-gray-800 tracking-tight">Our Work & Insights</h1>
+                    </div>
+                    <p class="text-xl text-gray-600 mb-16 max-w-3xl leading-relaxed">Explore our latest industry articles, technical work samples, and deep dives into HR Data Analytics.</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-12" id="blog-grid">
+                        <!-- Blog posts injected by JS -->
+                    </div>
+
+                    <div id="load-more-container" class="mt-20 text-center">
+                        <button id="load-more-btn" class="bg-[#0B1B2B] text-white px-10 py-4 font-bold rounded hover:bg-[#007BFF] transition-all uppercase tracking-widest text-sm shadow-xl flex items-center justify-center mx-auto space-x-2 min-w-[200px]">
+                            Load More Articles
+                        </button>
+                    </div>
+                    <div id="end-of-content" class="mt-20 text-center text-gray-400 italic hidden">
+                        You've reached the end of our current insights.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BOOK CALL PAGE -->
+        <section id="book" class="page-section">
+            <div class="py-20 bg-gray-50 min-h-screen">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-12">
+                        <div class="flex items-center justify-center space-x-2 mb-4">
+                            <div class="w-10 h-1 bg-[#007BFF]"></div>
+                            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight">Book A Strategy Call</h1>
+                        </div>
+                        <p class="text-xl text-gray-600 max-w-2xl mx-auto">Schedule a 15-minute discovery session to discuss your HR data goals.</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-100 min-h-[700px] relative">
+                        <div id="calendly-container" style="min-width: 320px; height: 700px;">
+                            <div class="absolute inset-0 flex items-center justify-center text-gray-400 italic">Loading booking calendar...</div>
+                        </div>
+                    </div>
+                    <div class="mt-12 text-center text-gray-500 text-sm">
+                        <p>Having trouble with the widget? Reach out at <span class="font-bold text-[#0B1B2B]">info@CodableHR.com</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#0B1B2B] text-white pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 border-b border-white/10 pb-12">
+                <div>
+                    <h3 class="text-xl font-bold mb-8 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-1 after:bg-[#007BFF]">Our Head Office</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-4"><i data-lucide="map-pin" class="text-[#007BFF] w-6 h-6 shrink-0"></i><p class="text-gray-400">#305 - 111 Lawton Blvd, Toronto, ON</p></div>
+                        <div class="flex items-center space-x-4"><i data-lucide="phone" class="text-[#007BFF] w-6 h-6 shrink-0"></i><p class="text-gray-400">(647) 542-6760</p></div>
+                        <div class="flex items-center space-x-4"><i data-lucide="mail" class="text-[#007BFF] w-6 h-6 shrink-0"></i><p class="text-gray-400">info@CodableHR.com</p></div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-8 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-1 after:bg-[#007BFF]">Newsletter</h3>
+                    <p class="text-gray-400 mb-6">Subscribe to our newsletter and get latest updates.</p>
+                    <form class="flex" onsubmit="event.preventDefault(); alert('Subscribed!')">
+                        <input type="email" placeholder="Email goes here" class="flex-grow bg-white text-gray-900 px-4 py-3 rounded-l focus:outline-none" required>
+                        <button type="submit" class="bg-white border-l border-gray-200 text-[#0B1B2B] px-6 py-3 rounded-r font-bold hover:bg-[#007BFF] hover:text-white transition-all">Submit</button>
+                    </form>
+                </div>
+            </div>
+            <div class="pt-10 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
+                <p>&copy; <span id="year"></span> CodableHR. All Rights Reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- TEMPLATES -->
+    <template id="why-choose-us-template">
+        <section class="py-24 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col lg:flex-row items-center gap-16">
+                    <div class="lg:w-1/2 relative">
+                        <div class="absolute -top-4 -left-4 w-full h-full border-4 border-gray-200 z-0"></div>
+                        <img src="https://picsum.photos/seed/hr-team-office/800/600" alt="HR" class="relative z-10 w-full rounded shadow-xl grayscale-hover">
+                    </div>
+                    <div class="lg:w-1/2">
+                        <div class="flex items-center space-x-2 mb-4"><div class="w-10 h-1 bg-gray-300"></div><h2 class="text-3xl font-bold text-gray-800">Why Choose Us?</h2></div>
+                        <p class="text-xl text-gray-600 mb-8 leading-relaxed">Since 2020, <span class="text-[#007BFF] font-bold">hundreds of projects have trusted us</span> with their key initiatives.</p>
+                        <div class="grid grid-cols-2 gap-8">
+                            <div class="flex items-center space-x-4"><div class="w-12 h-12 bg-white rounded shadow-sm flex items-center justify-center text-[#007BFF]"><i data-lucide="user-check"></i></div><div><p class="text-3xl font-bold text-gray-800">20+</p><p class="text-gray-500 text-sm">Clients</p></div></div>
+                            <div class="flex items-center space-x-4"><div class="w-12 h-12 bg-white rounded shadow-sm flex items-center justify-center text-[#007BFF]"><i data-lucide="settings"></i></div><div><p class="text-3xl font-bold text-gray-800">30+</p><p class="text-gray-500 text-sm">Active</p></div></div>
+                            <div class="flex items-center space-x-4"><div class="w-12 h-12 bg-white rounded shadow-sm flex items-center justify-center text-[#007BFF]"><i data-lucide="check-circle-2"></i></div><div><p class="text-3xl font-bold text-gray-800">100+</p><p class="text-gray-500 text-sm">Completed</p></div></div>
+                            <div class="flex items-center space-x-4"><div class="w-12 h-12 bg-white rounded shadow-sm flex items-center justify-center text-[#007BFF]"><i data-lucide="clock"></i></div><div><p class="text-3xl font-bold text-gray-800">20+</p><p class="text-gray-500 text-sm">Ongoing</p></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="service-grid-template">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white border border-gray-100 p-8 text-center flex flex-col items-center hover:shadow-lg transition-all group">
+                    <i data-lucide="bar-chart" class="text-[#007BFF] mb-4 group-hover:scale-110 transition-transform w-10 h-10"></i><h4 class="font-bold text-gray-800">People Analytics</h4>
+                </div>
+                <div class="bg-white border border-gray-100 p-8 text-center flex flex-col items-center hover:shadow-lg transition-all group">
+                    <i data-lucide="cpu" class="text-[#007BFF] mb-4 group-hover:scale-110 transition-transform w-10 h-10"></i><h4 class="font-bold text-gray-800">HR Budget</h4>
+                </div>
+                <div class="bg-white border border-gray-100 p-8 text-center flex flex-col items-center hover:shadow-lg transition-all group">
+                    <i data-lucide="search" class="text-[#007BFF] mb-4 group-hover:scale-110 transition-transform w-10 h-10"></i><h4 class="font-bold text-gray-800">Job Evaluation</h4>
+                </div>
+                <div class="bg-white border border-gray-100 p-8 text-center flex flex-col items-center hover:shadow-lg transition-all group">
+                    <i data-lucide="users" class="text-[#007BFF] mb-4 group-hover:scale-110 transition-transform w-10 h-10"></i><h4 class="font-bold text-gray-800">Total Comp</h4>
+                </div>
+                <div class="bg-white border border-gray-100 p-8 text-center flex flex-col items-center hover:shadow-lg transition-all group">
+                    <i data-lucide="shopping-cart" class="text-[#007BFF] mb-4 group-hover:scale-110 transition-transform w-10 h-10"></i><h4 class="font-bold text-gray-800">Payroll</h4>
+                </div>
+                <div class="bg-white border border-gray-100 p-8 text-center flex flex-col items-center hover:shadow-lg transition-all group">
+                    <i data-lucide="thumbs-up" class="text-[#007BFF] mb-4 group-hover:scale-110 transition-transform w-10 h-10"></i><h4 class="font-bold text-gray-800">Learning Data</h4>
+                </div>
+                <div class="bg-white border border-gray-100 p-8 text-center flex flex-col items-center hover:shadow-lg transition-all group">
+                    <i data-lucide="trending-up" class="text-[#007BFF] mb-4 group-hover:scale-110 transition-transform w-10 h-10"></i><h4 class="font-bold text-gray-800">Recruitment</h4>
+                </div>
+                <div class="bg-white border border-gray-100 p-8 text-center flex flex-col items-center hover:shadow-lg transition-all group">
+                    <i data-lucide="layout" class="text-[#007BFF] mb-4 group-hover:scale-110 transition-transform w-10 h-10"></i><h4 class="font-bold text-gray-800">Timesheets</h4>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="love-hr-template">
+        <section class="py-20 bg-[#0B1B2B] text-white overflow-hidden relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6"><span class="text-[#007BFF]">We love HR Data, so you don't have to.</span> The Codable approach means smart support for every stage.</h2>
+                <div class="flex flex-col md:flex-row justify-center gap-12 mt-16">
+                    <div class="max-w-xs mx-auto text-center"><i data-lucide="target" class="mx-auto w-12 h-12 mb-4 text-[#007BFF]"></i><button class="bg-[#007BFF] text-white w-full py-4 font-bold rounded hover:bg-[#0056b3] transition-colors mb-4 uppercase tracking-wider text-sm">Project-Based Support</button><p class="text-xs text-gray-400">Flat fee pricing for standalone projects.</p></div>
+                    <div class="max-w-xs mx-auto text-center"><i data-lucide="shield-check" class="mx-auto w-12 h-12 mb-4 text-[#007BFF]"></i><button class="bg-[#007BFF] text-white w-full py-4 font-bold rounded hover:bg-[#0056b3] transition-colors mb-4 uppercase tracking-wider text-sm">Fractional People Data</button><p class="text-xs text-gray-400">Ongoing, hyper-flexible expertise.</p></div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- JS LOGIC -->
+    <script>
+        const AREAS_OF_FOCUS = [
+            { title: 'Employee Engagement & Survey Insights', description: 'End-to-end administration and analysis of feedback surveys turning raw feedback into leadership-ready reports.' },
+            { title: 'Performance & Talent Review Management', description: 'We manage full performance cycles and deliver structured talent assessments with development recommendations.' },
+            { title: 'HRIS Administration & Custom Reporting', description: 'Expert support across Workday, UKG, and Oracle HCM, including workflow fixes and real-time reports.' },
+            { title: 'Power BI Monthly & Quarterly HR Reporting', description: 'Complete dashboard for headcount, turnover, and absenteeism - leadership-ready every time.' },
+            { title: 'Compensation & HR Budget Planning', description: 'Salary/bonus modeling, merit cycles, and compensation review processes with clear analytics.' },
+            { title: 'Pay Equity & Job Evaluation Analysis', description: 'Comprehensive risk assessment and role analysis to ensure fairness and compliance.' },
+            { title: 'Organization Structure & Workforce Insights', description: 'Span of control, workforce modeling, and staffing analysis to help leaders make organizational decisions.' },
+            { title: 'Mini Apps for HR Operations', description: 'Custom-built micro tools designed to eliminate manual work and reduce errors instantly.' },
+            { title: 'Report Automation & Custom Queries', description: 'We automate repetitive HR reports (cutting hours down to seconds) and build advanced PeopleSoft queries.' }
+        ];
+
+        const DIFF_ITEMS = [
+            { title: 'Modern Strategy', icon: 'clipboard', desc: 'We bring clarity to complex environments by using fundamental and universal data tools.' },
+            { title: 'People Greeks', icon: 'cpu', desc: 'We are tech geeks with extensive HR expertise, staying up-to-date with latest advancements.' },
+            { title: 'People-focused', icon: 'search', desc: 'Ultra-flexible and adaptable product designed with a people-focused approach.' },
+            { title: 'Empower Business', icon: 'target', desc: 'We love people data so you don\'t have to. Let experts handle the nitty gritty.' },
+            { title: 'Our values', icon: 'layout', desc: 'People > Product > Process > Data' },
+            { title: 'Ultra-flexible', icon: 'bar-chart', desc: 'Whether on-demand or fractional, we offer tailored services seamlessly integrating AI.' }
+        ];
+
+        const BLOG_POSTS = [
+            { id: 1, title: 'How AI is Transforming HR Data Analytics in 2024', excerpt: 'Discover latest trends in HR automation and how predictive modeling is helping retention...', date: 'May 12, 2024', category: 'Industry Article', image: 'https://picsum.photos/seed/hr-analytics-ai/800/450' },
+            { id: 2, title: 'Case Study: 40% Increase in Payroll Efficiency', excerpt: 'Learn how CodableHR helped a tech firm overhaul their HRIS system and workflows...', date: 'April 28, 2024', category: 'Work Sample', image: 'https://picsum.photos/seed/payroll-efficiency/800/450' },
+            { id: 3, title: 'The Future of People Analytics: Beyond Dashboards', excerpt: 'Dashboards are just the start. We explore deep data mining for cultural trends...', date: 'April 15, 2024', category: 'Industry Article', image: 'https://picsum.photos/seed/people-analytics-future/800/450' },
+            { id: 4, title: 'Implementation Spotlight: Global Retail HRIS', excerpt: 'A deep dive into a 6-month project managing HRIS for a retail chain with 5,000+ employees...', date: 'March 22, 2024', category: 'Work Sample', image: 'https://picsum.photos/seed/retail-hris/800/450' }
+        ];
+
+        const EXTRA_POSTS = [
+            { id: 5, title: '5 Steps to Building a Data-Driven HR Culture', excerpt: 'Culture is the backbone of any analytics initiative. Learn how to foster curiosity and trust...', date: 'March 10, 2024', category: 'Industry Article', image: 'https://picsum.photos/seed/hr-culture-data/800/450' },
+            { id: 6, title: 'Automating the Offboarding Journey', excerpt: 'Exit interviews are valuable, but the data often sits in a drawer. See how we automate sentiment analysis...', date: 'Feb 25, 2024', category: 'Work Sample', image: 'https://picsum.photos/seed/offboarding-auto/800/450' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
+            // Populate Focus Grid (All 9 items)
+            const focusGrid = document.getElementById('focus-grid');
+            AREAS_OF_FOCUS.forEach(focus => {
+                focusGrid.innerHTML += `
+                    <div class="bg-white p-8 rounded shadow-lg border-l-4 border-[#007BFF] service-card-hover transition-transform flex flex-col">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 h-[3.5rem] flex items-center">${focus.title}</h3>
+                        <p class="text-gray-600 leading-relaxed text-sm">${focus.description}</p>
+                    </div>`;
+            });
+
+            // Populate Diff Grid (6 items)
+            const diffGrid = document.getElementById('diff-grid');
+            DIFF_ITEMS.forEach(item => {
+                diffGrid.innerHTML += `
+                    <div class="bg-white border border-gray-100 p-10 hover:shadow-2xl hover:z-30 transition-all flex flex-col items-center text-center">
+                        <div class="text-[#007BFF] mb-6"><i data-lucide="${item.icon}" class="w-12 h-12"></i></div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">${item.title}</h3>
+                        <p class="text-gray-500 leading-relaxed text-sm">${item.desc}</p>
+                    </div>`;
+            });
+
+            injectSharedComponents();
+            renderBlogPosts(BLOG_POSTS);
+            window.addEventListener('hashchange', handleRouting);
+            handleRouting();
+
+            document.getElementById('mobile-menu-btn').onclick = toggleMobileMenu;
+            document.getElementById('close-menu-btn').onclick = toggleMobileMenu;
+            document.getElementById('load-more-btn').onclick = loadMorePosts;
+        });
+
+        function handleRouting() {
+            const hash = window.location.hash || '#home';
+            const pageId = hash.substring(1);
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(s => s.classList.remove('active'));
+            const target = document.getElementById(pageId) || document.getElementById('home');
+            target.classList.add('active');
+            window.scrollTo(0, 0);
+            document.getElementById('mobile-drawer').classList.remove('open');
+            if (pageId === 'book') initCalendly();
+        }
+
+        function injectSharedComponents() {
+            const why = document.getElementById('why-choose-us-template').innerHTML;
+            const grid = document.getElementById('service-grid-template').innerHTML;
+            const love = document.getElementById('love-hr-template').innerHTML;
+            document.getElementById('why-choose-us-placeholder-home').innerHTML = why;
+            document.querySelectorAll('[id^="service-grid-placeholder"]').forEach(el => el.innerHTML = grid);
+            document.querySelectorAll('[id^="love-hr-placeholder"]').forEach(el => el.innerHTML = love);
+            lucide.createIcons();
+        }
+
+        function renderBlogPosts(posts, append = false) {
+            const blogGrid = document.getElementById('blog-grid');
+            if (!append) blogGrid.innerHTML = '';
+            posts.forEach(post => {
+                blogGrid.innerHTML += `
+                    <article class="group cursor-pointer">
+                        <div class="relative overflow-hidden rounded-lg mb-6 shadow-md aspect-video bg-gray-100">
+                            <img src="${post.image}" alt="${post.title}" 
+                                 onerror="handleImgError(this, ${post.id})"
+                                 class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                            <div class="absolute top-4 left-4 bg-[#007BFF] text-white px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded">${post.category}</div>
+                        </div>
+                        <div class="flex items-center space-x-6 text-gray-400 text-sm mb-4">
+                            <div class="flex items-center space-x-2"><i data-lucide="calendar" class="w-4 h-4"></i><span>${post.date}</span></div>
+                            <div class="flex items-center space-x-2"><i data-lucide="user" class="w-4 h-4"></i><span>CodableHR Team</span></div>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4 group-hover:text-[#007BFF] transition-colors line-clamp-2">${post.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-6 line-clamp-3">${post.excerpt}</p>
+                        <div class="flex items-center space-x-2 text-[#007BFF] font-bold uppercase text-xs tracking-widest group-hover:translate-x-2 transition-transform">
+                            <span>Read Full Article</span><i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </article>`;
+            });
+            lucide.createIcons();
+        }
+
+        function handleImgError(img, id) {
+            // High reliability fallback
+            img.onerror = null; // Prevent infinite loop
+            img.src = `https://picsum.photos/800/450?random=fallback-${id}`;
+        }
+
+        function loadMorePosts() {
+            const btn = document.getElementById('load-more-btn');
+            btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin w-5 h-5"></i><span>Loading...</span>';
+            lucide.createIcons();
+            setTimeout(() => {
+                renderBlogPosts(EXTRA_POSTS, true);
+                document.getElementById('load-more-container').classList.add('hidden');
+                document.getElementById('end-of-content').classList.remove('hidden');
+            }, 800);
+        }
+
+        function toggleMobileMenu() { document.getElementById('mobile-drawer').classList.toggle('open'); }
+
+        let calendlyInited = false;
+        function initCalendly() {
+            if (calendlyInited) return;
+            const container = document.getElementById('calendly-container');
+            const script = document.createElement('script');
+            script.src = 'https://assets.calendly.com/assets/external/widget.js';
+            script.async = true;
+            document.body.appendChild(script);
+            script.onload = () => {
+                container.innerHTML = '';
+                window.Calendly.initInlineWidget({ url: 'https://calendly.com/hranalytics-ca/15min', parentElement: container });
+                calendlyInited = true;
+            };
+        }
+    </script>
 </body>
 </html>
