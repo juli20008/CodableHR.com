@@ -2,10 +2,8 @@
 import React from 'react';
 import { 
   Users, 
-  FileEdit, 
   BarChart, 
   ThumbsUp, 
-  Clipboard, 
   Cpu, 
   Search, 
   Target, 
@@ -18,7 +16,6 @@ import {
   CheckCircle2,
   Clock
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 export const WhyChooseUs = () => (
   <section className="py-24 bg-gray-50">
@@ -101,7 +98,6 @@ export const ServiceGridCommon = () => {
       {items.map((item, idx) => (
         <div key={idx} className="bg-white border border-gray-100 p-8 text-center flex flex-col items-center justify-center hover:shadow-lg transition-all group">
           <div className="text-[#007BFF] mb-4 group-hover:scale-110 transition-transform">
-            {/* Fix: use ReactElement<any> to avoid 'size' property error during cloning */}
             {React.cloneElement(item.icon as React.ReactElement<any>, { size: 40, strokeWidth: 1.5 })}
           </div>
           <h4 className="font-bold text-gray-800">{item.title}</h4>
@@ -112,35 +108,43 @@ export const ServiceGridCommon = () => {
 };
 
 export const LoveHRSection = () => (
-  <section className="py-20 bg-[#0B1B2B] text-white overflow-hidden relative">
+  <section className="py-24 bg-[#0B1B2B] text-white overflow-hidden relative">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-      <h2 className="text-4xl md:text-5xl font-bold mb-6">
-        <span className="text-[#007BFF]">We love HR Data, so you don't have to.</span> The Codable approach means smart, holistic, part-time or project based support for every stage of growth.
+      <h2 className="text-3xl md:text-5xl font-bold mb-16 leading-tight">
+        <span className="text-[#007BFF]">We love HR Data, so you don't have to.</span>
+        <br />
+        The Codable approach means smart support for every stage.
       </h2>
       
-      <div className="flex flex-col md:flex-row justify-center gap-12 mt-16">
-        <div className="max-w-xs mx-auto">
-          <div className="mb-6 flex justify-center">
-             <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center text-white">
-                <Target size={40} />
+      <div className="flex flex-col md:flex-row justify-center gap-8 max-w-4xl mx-auto">
+        {/* Project Card */}
+        <div className="flex-1 bg-white/5 border border-white/10 p-10 rounded-2xl backdrop-blur-sm transition-all text-center">
+          <div className="mb-8 flex justify-center">
+             <div className="w-16 h-16 bg-[#007BFF] rounded-xl flex items-center justify-center text-white shadow-lg shadow-[#007BFF]/20">
+                <Target size={32} />
              </div>
           </div>
-          <button className="bg-[#007BFF] text-white w-full py-4 font-bold rounded-md hover:bg-[#0056b3] transition-colors mb-4 uppercase tracking-wider">
-            Audits & Project-Based Support
-          </button>
-          <p className="text-gray-400 text-sm">Flat fee pricing for standalone projects and short-term engagements.</p>
+          <h3 className="text-xl font-bold text-white mb-4 uppercase tracking-widest">
+            Project-Based Support
+          </h3>
+          <p className="text-gray-400 text-sm leading-relaxed">
+            Flat fee pricing for standalone projects, audits, and short-term tactical engagements.
+          </p>
         </div>
 
-        <div className="max-w-xs mx-auto">
-          <div className="mb-6 flex justify-center">
-             <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center text-white">
-                <ShieldCheck size={40} />
+        {/* Fractional Card */}
+        <div className="flex-1 bg-white/5 border border-white/10 p-10 rounded-2xl backdrop-blur-sm transition-all text-center">
+          <div className="mb-8 flex justify-center">
+             <div className="w-16 h-16 bg-[#007BFF] rounded-xl flex items-center justify-center text-white shadow-lg shadow-[#007BFF]/20">
+                <ShieldCheck size={32} />
              </div>
           </div>
-          <button className="bg-[#007BFF] text-white w-full py-4 font-bold rounded-md hover:bg-[#0056b3] transition-colors mb-4 uppercase tracking-wider">
-            Fractional People Data Service
-          </button>
-          <p className="text-gray-400 text-sm">Ongoing, retained, hyper-flexible human resources data expertise for your growing business.</p>
+          <h3 className="text-xl font-bold text-white mb-4 uppercase tracking-widest">
+            Fractional People Data
+          </h3>
+          <p className="text-gray-400 text-sm leading-relaxed">
+            Ongoing, retained, hyper-flexible human resources data expertise integrated into your team.
+          </p>
         </div>
       </div>
     </div>

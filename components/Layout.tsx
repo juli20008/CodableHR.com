@@ -8,7 +8,6 @@ import {
   MapPin, 
   Phone, 
   Mail, 
-  ArrowRight,
   Leaf
 } from 'lucide-react';
 
@@ -26,6 +25,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
+  // Lock scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isMenuOpen]);
+
   const services = [
     { name: 'HR Dashboard Subscription', path: '/subscription' },
     { name: 'AI HR Automation', path: '/automation' },
@@ -35,7 +43,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Top Banner */}
-      <div className="bg-[#007BFF] text-white py-2 text-center text-sm font-medium px-4">
+      <div className="bg-[#007BFF] text-white py-2 text-center text-sm font-medium px-4 relative z-[60]">
         Tired of the endless HR number juggling? Check out our <Link to="/subscription" className="underline font-bold">HR Analytics subscription service!</Link>
       </div>
 
@@ -56,7 +64,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <div className="relative group">
                 <button 
                   onMouseEnter={() => setIsServicesOpen(true)}
-                  className="flex items-center space-x-1 hover:text-[#007BFF] transition-colors py-4"
+                  className="flex items-center space-x-1 hover:text-[#007BFF] transition-colors py-4 uppercase font-medium text-sm tracking-widest"
                 >
                   <span>SERVICES</span>
                   <ChevronDown className="w-4 h-4" />
@@ -91,41 +99,63 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
             {/* Mobile menu button */}
             <div className="md:hidden">
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2">
-                {isMenuOpen ? <X /> : <Menu />}
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 relative z-[110]">
+                {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
               </button>
             </div>
           </div>
         </div>
 
-        {/* Mobile menu */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-[#0B1B2B] pb-6 px-4">
-            <div className="flex flex-col space-y-4">
-              <div className="border-t border-white/10 pt-4">
-                <p className="text-gray-400 text-xs font-bold tracking-widest mb-2 uppercase">Services</p>
+        {/* Mobile menu Overlay */}
+        <div className={`fixed inset-0 bg-[#0B1B2B] z-[100] transition-transform duration-300 transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden`}>
+          <div className="flex flex-col h-full p-6 pt-24 space-y-8 overflow-y-auto">
+            <div className="border-t border-white/10 pt-8">
+              <p className="text-gray-400 text-xs font-bold tracking-widest mb-6 uppercase">Services</p>
+              <div className="flex flex-col space-y-4">
                 {services.map((service) => (
                   <Link 
                     key={service.path} 
                     to={service.path} 
-                    className="block py-2 text-lg"
+                    className="text-2xl font-bold hover:text-[#007BFF] transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {service.name}
                   </Link>
                 ))}
               </div>
-              <Link to="/blog" className="text-lg uppercase" onClick={() => setIsMenuOpen(false)}>OUR WORK & INSIGHTS</Link>
+            </div>
+            
+            <Link 
+              to="/blog" 
+              className="text-2xl font-bold uppercase tracking-tight hover:text-[#007BFF] transition-colors" 
+              onClick={() => setIsMenuOpen(false)}
+            >
+              OUR WORK & INSIGHTS
+            </Link>
+            
+            <div className="pt-8">
               <Link 
                 to="/book" 
-                className="bg-[#007BFF] text-white px-6 py-3 rounded text-center font-bold"
+                className="block w-full bg-[#007BFF] text-white py-5 rounded-lg text-center font-bold text-xl shadow-lg"
                 onClick={() => setIsMenuOpen(false)}
               >
                 BOOK A CALL
               </Link>
             </div>
+
+            {/* Quick Contact for Mobile */}
+            <div className="mt-auto pt-12 text-gray-400 space-y-4 text-sm border-t border-white/10">
+                <div className="flex items-center space-x-3">
+                  <Mail size={16} className="text-[#007BFF]" />
+                  <span>info@CodableHR.com</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Phone size={16} className="text-[#007BFF]" />
+                  <span>(647) 542-6760</span>
+                </div>
+            </div>
           </div>
-        )}
+        </div>
       </nav>
 
       {/* Main Content */}
@@ -164,7 +194,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 Newsletter
               </h3>
               <p className="text-gray-400 mb-6">Subscribe to our newsletter and get latest updates and offers.</p>
-              <form className="flex">
+              <form className="flex" onSubmit={(e) => e.preventDefault()}>
                 <input 
                   type="email" 
                   placeholder="Email goes here" 
