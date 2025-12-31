@@ -20,12 +20,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const { pathname } = useLocation();
 
-  // Scroll to top on path change
+  // 路由变化时自动滚动到顶部并关闭菜单
   useEffect(() => {
     window.scrollTo(0, 0);
+    setIsMenuOpen(false);
   }, [pathname]);
 
-  // Lock scroll when mobile menu is open
+  // 当菜单打开时，禁止背景滚动
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -41,7 +42,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative">
       {/* Top Banner */}
       <div className="bg-[#007BFF] text-white py-2 text-center text-sm font-medium px-4 relative z-[60]">
         Tired of the endless HR number juggling? Check out our <Link to="/subscription" className="underline font-bold">HR Analytics subscription service!</Link>
@@ -99,64 +100,85 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
             {/* Mobile menu button */}
             <div className="md:hidden">
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 relative z-[110]">
+              <button 
+                onClick={() => setIsMenuOpen(!isMenuOpen)} 
+                className="p-2 relative z-[110] text-white"
+                aria-label="Toggle Menu"
+              >
                 {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
               </button>
             </div>
           </div>
         </div>
+      </nav>
 
-        {/* Mobile menu Overlay */}
-        <div className={`fixed inset-0 bg-[#0B1B2B] z-[100] transition-transform duration-300 transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden`}>
-          <div className="flex flex-col h-full p-6 pt-24 space-y-8 overflow-y-auto">
-            <div className="border-t border-white/10 pt-8">
-              <p className="text-gray-400 text-xs font-bold tracking-widest mb-6 uppercase">Services</p>
-              <div className="flex flex-col space-y-4">
-                {services.map((service) => (
-                  <Link 
-                    key={service.path} 
-                    to={service.path} 
-                    className="text-2xl font-bold hover:text-[#007BFF] transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {service.name}
-                  </Link>
-                ))}
-              </div>
+      {/* 
+        Mobile menu Overlay - 移出 nav 容器
+        使用 !bg-[#0B1B2B] 强制不透明背景，z-[100] 确保在最上层
+      */}
+      <div className={`fixed inset-0 !bg-[#0B1B2B] opacity-100 z-[100] transition-transform duration-300 transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden`}>
+        <div className="flex flex-col h-full p-6 pt-24 space-y-8 overflow-y-auto">
+          {/* 菜单顶部的 Logo 和 关闭按钮 */}
+          <div className="absolute top-6 left-6 flex items-center space-x-2">
+            <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+              <Leaf className="text-[#007BFF] w-5 h-5" />
             </div>
-            
-            <Link 
-              to="/blog" 
-              className="text-2xl font-bold uppercase tracking-tight hover:text-[#007BFF] transition-colors" 
-              onClick={() => setIsMenuOpen(false)}
-            >
-              OUR WORK & INSIGHTS
-            </Link>
-            
-            <div className="pt-8">
-              <Link 
-                to="/book" 
-                className="block w-full bg-[#007BFF] text-white py-5 rounded-lg text-center font-bold text-xl shadow-lg"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                BOOK A CALL
-              </Link>
-            </div>
+            <span className="text-xl font-bold text-white">Codable<span className="text-[#007BFF]">HR</span></span>
+          </div>
+          <button 
+            onClick={() => setIsMenuOpen(false)}
+            className="absolute top-6 right-6 text-white"
+          >
+            <X size={32} />
+          </button>
 
-            {/* Quick Contact for Mobile */}
-            <div className="mt-auto pt-12 text-gray-400 space-y-4 text-sm border-t border-white/10">
-                <div className="flex items-center space-x-3">
-                  <Mail size={16} className="text-[#007BFF]" />
-                  <span>info@CodableHR.com</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Phone size={16} className="text-[#007BFF]" />
-                  <span>(647) 542-6760</span>
-                </div>
+          <div className="border-t border-white/10 pt-12">
+            <p className="text-gray-400 text-xs font-bold tracking-widest mb-6 uppercase">Services</p>
+            <div className="flex flex-col space-y-6">
+              {services.map((service) => (
+                <Link 
+                  key={service.path} 
+                  to={service.path} 
+                  className="text-2xl font-bold text-white hover:text-[#007BFF] transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {service.name}
+                </Link>
+              ))}
             </div>
           </div>
+          
+          <Link 
+            to="/blog" 
+            className="text-2xl font-bold text-white uppercase tracking-tight hover:text-[#007BFF] transition-colors" 
+            onClick={() => setIsMenuOpen(false)}
+          >
+            OUR WORK & INSIGHTS
+          </Link>
+          
+          <div className="pt-8">
+            <Link 
+              to="/book" 
+              className="block w-full bg-[#007BFF] text-white py-5 rounded-lg text-center font-bold text-xl shadow-lg"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              BOOK A CALL
+            </Link>
+          </div>
+
+          {/* Quick Contact for Mobile */}
+          <div className="mt-auto pt-12 text-gray-400 space-y-4 text-sm border-t border-white/10">
+              <div className="flex items-center space-x-3">
+                <Mail size={16} className="text-[#007BFF]" />
+                <span>info@CodableHR.com</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Phone size={16} className="text-[#007BFF]" />
+                <span>(647) 542-6760</span>
+              </div>
+          </div>
         </div>
-      </nav>
+      </div>
 
       {/* Main Content */}
       <main className="flex-grow">

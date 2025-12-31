@@ -25,8 +25,18 @@
         .dropdown-menu { display: none; opacity: 0; transform: translateY(-10px); transition: all 0.2s; }
         .group:hover .dropdown-menu { display: block; opacity: 1; transform: translateY(0); }
         
-        .mobile-menu { transform: translateX(100%); transition: transform 0.3s ease-in-out; }
-        .mobile-menu.open { transform: translateX(0); }
+        /* 移动端菜单样式：强制 100% 不透明背景 */
+        .mobile-menu { 
+            transform: translateX(100%); 
+            transition: transform 0.3s ease-in-out; 
+            opacity: 1 !important; 
+            background-color: #0B1B2B !important; 
+            visibility: hidden;
+        }
+        .mobile-menu.open { 
+            transform: translateX(0); 
+            visibility: visible;
+        }
 
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
@@ -48,7 +58,7 @@
 }
 </script>
 </head>
-<body class="bg-white text-gray-900">
+<body class="bg-white text-gray-900 overflow-x-hidden">
 
     <!-- Top Banner -->
     <div class="bg-[#007BFF] text-white py-2 text-center text-sm font-medium px-4 relative z-[60]">
@@ -88,31 +98,37 @@
 
                 <!-- Mobile menu button -->
                 <div class="md:hidden">
-                    <button id="mobile-menu-btn" class="p-2">
+                    <button id="mobile-menu-btn" class="p-2 relative z-[110] text-white">
                         <i data-lucide="menu" id="menu-icon"></i>
                     </button>
                 </div>
             </div>
         </div>
-
-        <!-- Mobile menu Drawer -->
-        <div id="mobile-drawer" class="fixed inset-0 bg-[#0B1B2B] z-[100] mobile-menu p-6 flex flex-col space-y-8 md:hidden">
-            <div class="flex justify-between items-center">
-                <span class="text-2xl font-bold">Codable<span class="text-[#007BFF]">HR</span></span>
-                <button id="close-menu-btn"><i data-lucide="x" class="w-8 h-8"></i></button>
-            </div>
-            <div class="flex flex-col space-y-6 text-xl">
-                <div class="border-t border-white/10 pt-4">
-                    <p class="text-gray-400 text-xs font-bold tracking-widest mb-4 uppercase">Services</p>
-                    <a href="#subscription" class="block py-2">HR Dashboard Subscription</a>
-                    <a href="#automation" class="block py-2">AI HR Automation</a>
-                    <a href="#hris" class="block py-2">HRIS Administration</a>
-                </div>
-                <a href="#blog" class="block uppercase tracking-wide">Our Work & Insights</a>
-                <a href="#book" class="bg-[#007BFF] text-white px-6 py-4 rounded text-center font-bold shadow-lg">BOOK A CALL</a>
-            </div>
-        </div>
     </nav>
+
+    <!-- 移动端菜单 Drawer - 移出 nav 标签，设置强制不透明背景 -->
+    <div id="mobile-drawer" class="fixed inset-0 bg-[#0B1B2B] z-[100] mobile-menu p-6 pt-24 flex flex-col space-y-8 md:hidden">
+        <div class="absolute top-6 left-6 flex items-center space-x-2">
+            <div class="w-8 h-8 bg-white rounded flex items-center justify-center">
+                <i data-lucide="leaf" class="text-[#007BFF] w-5 h-5"></i>
+            </div>
+            <span class="text-xl font-bold text-white">Codable<span class="text-[#007BFF]">HR</span></span>
+        </div>
+        <button id="close-menu-btn" class="absolute top-6 right-6 text-white">
+            <i data-lucide="x" class="w-10 h-10"></i>
+        </button>
+
+        <div class="flex flex-col space-y-6 text-xl">
+            <div class="border-t border-white/10 pt-8">
+                <p class="text-gray-400 text-xs font-bold tracking-widest mb-4 uppercase">Services</p>
+                <a href="#subscription" class="block py-4 text-2xl font-bold text-white">HR Dashboard Subscription</a>
+                <a href="#automation" class="block py-4 text-2xl font-bold text-white">AI HR Automation</a>
+                <a href="#hris" class="block py-4 text-2xl font-bold text-white">HRIS Administration</a>
+            </div>
+            <a href="#blog" class="block uppercase tracking-wide text-2xl font-bold pt-4 text-white">Our Work & Insights</a>
+            <a href="#book" class="bg-[#007BFF] text-white px-6 py-5 rounded text-center font-bold shadow-lg text-xl">BOOK A CALL</a>
+        </div>
+    </div>
 
     <main id="content-mount">
         
@@ -464,12 +480,44 @@
     </template>
 
     <template id="love-hr-template">
-        <section class="py-20 bg-[#0B1B2B] text-white overflow-hidden relative">
+        <section class="py-24 bg-[#0B1B2B] text-white overflow-hidden relative">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                <h2 class="text-3xl md:text-5xl font-bold mb-6"><span class="text-[#007BFF]">We love HR Data, so you don't have to.</span> The Codable approach means smart support for every stage.</h2>
-                <div class="flex flex-col md:flex-row justify-center gap-12 mt-16">
-                    <div class="max-w-xs mx-auto text-center"><i data-lucide="target" class="mx-auto w-12 h-12 mb-4 text-[#007BFF]"></i><button class="bg-[#007BFF] text-white w-full py-4 font-bold rounded hover:bg-[#0056b3] transition-colors mb-4 uppercase tracking-wider text-sm">Project-Based Support</button><p class="text-xs text-gray-400">Flat fee pricing for standalone projects.</p></div>
-                    <div class="max-w-xs mx-auto text-center"><i data-lucide="shield-check" class="mx-auto w-12 h-12 mb-4 text-[#007BFF]"></i><button class="bg-[#007BFF] text-white w-full py-4 font-bold rounded hover:bg-[#0056b3] transition-colors mb-4 uppercase tracking-wider text-sm">Fractional People Data</button><p class="text-xs text-gray-400">Ongoing, hyper-flexible expertise.</p></div>
+                <h2 class="text-3xl md:text-5xl font-bold mb-16 leading-tight">
+                    <span class="text-[#007BFF]">We love HR Data, so you don't have to.</span>
+                    <br />
+                    The Codable approach means smart support for every stage.
+                </h2>
+                
+                <div class="flex flex-col md:flex-row justify-center gap-8 max-w-4xl mx-auto">
+                    <!-- Project Card -->
+                    <div class="flex-1 bg-white/5 border border-white/10 p-10 rounded-2xl backdrop-blur-sm transition-all text-center">
+                        <div class="mb-8 flex justify-center">
+                            <div class="w-16 h-16 bg-[#007BFF] rounded-xl flex items-center justify-center text-white shadow-lg shadow-[#007BFF]/20">
+                                <i data-lucide="target" size="32"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-4 uppercase tracking-widest">
+                            Project-Based Support
+                        </h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Flat fee pricing for standalone projects, audits, and short-term tactical engagements.
+                        </p>
+                    </div>
+
+                    <!-- Fractional Card -->
+                    <div class="flex-1 bg-white/5 border border-white/10 p-10 rounded-2xl backdrop-blur-sm transition-all text-center">
+                        <div class="mb-8 flex justify-center">
+                            <div class="w-16 h-16 bg-[#007BFF] rounded-xl flex items-center justify-center text-white shadow-lg shadow-[#007BFF]/20">
+                                <i data-lucide="shield-check" size="32"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-4 uppercase tracking-widest">
+                            Fractional People Data
+                        </h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Ongoing, retained, hyper-flexible human resources data expertise integrated into your team.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -632,4 +680,4 @@
         }
     </script>
 </body>
-</html>
+</html>--- END OF FILES ---
