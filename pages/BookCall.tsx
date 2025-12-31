@@ -15,7 +15,7 @@ const BookCall: React.FC = () => {
         containerRef.current.innerHTML = '';
         // @ts-ignore
         window.Calendly.initInlineWidget({
-          url: 'https://calendly.com/hranalytics-ca/15min',
+          url: 'https://calendly.com/hranalytics-ca/30min',
           parentElement: containerRef.current,
           prefill: {},
           utm: {}
@@ -58,7 +58,7 @@ const BookCall: React.FC = () => {
             <h1 className="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight">Book A Strategy Call</h1>
           </div>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Schedule a 15-minute discovery session to discuss your HR data goals and how we can help automate your workflows.
+            Schedule a 30-minute discovery session to discuss your HR data goals and how we can help automate your workflows.
           </p>
         </div>
 

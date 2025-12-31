@@ -48,7 +48,7 @@ const Home: React.FC = () => {
     },
     {
       title: 'Mini Apps for HR Operations',
-      description: 'Custom-built micro tools — such as teacher placement systems and payroll/overpayment calculators — designed to eliminate manual work and reduce errors instantly.'
+      description: 'Custom-built micro tools designed to eliminate manual work and reduce errors instantly. i.e. surplus employee placement app'
     },
     {
       title: 'Report Automation & Custom Queries',
